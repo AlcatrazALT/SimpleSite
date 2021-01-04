@@ -2,7 +2,7 @@
 
 namespace SimpleSite.Domain.Entities
 {
-    public class Textfield : EntityBase
+    public class TextField : EntityBase
     {
         [Required]
         public string CodeWord { get; set; }
