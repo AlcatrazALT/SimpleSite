@@ -52,8 +52,19 @@ namespace SimpleSite
                 options.SlidingExpiration = true;
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminArea", policy =>
+                {
+                    policy.RequireRole("admin");
+                });
+            });
+
             services
-                .AddControllersWithViews()
+                .AddControllersWithViews(options =>
+                {
+                    options.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
+                })
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0)
                 .AddSessionStateTempDataProvider();
         }
@@ -75,6 +86,7 @@ namespace SimpleSite
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
